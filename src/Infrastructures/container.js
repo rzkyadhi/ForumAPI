@@ -1,9 +1,13 @@
 /* istanbul ignore file */
 
-const { createContainer } = require('instances-container');
+const {
+  createContainer
+} = require('instances-container');
 
 // external agency
-const { nanoid } = require('nanoid');
+const {
+  nanoid
+} = require('nanoid');
 const bcrypt = require('bcrypt');
 const Jwt = require('@hapi/jwt');
 const pool = require('./database/postgres/pool');
@@ -13,6 +17,8 @@ const UserRepository = require('../Domains/users/UserRepository');
 const PasswordHash = require('../Applications/security/PasswordHash');
 const UserRepositoryPostgres = require('./repository/UserRepositoryPostgres');
 const BcryptPasswordHash = require('./security/BcryptPasswordHash');
+const ThreadRepository = require('../Domains/threads/ThreadRepository')
+const ThreadRepositoryPostgres = require('./repository/ThreadRepositoryPostgres')
 
 // use case
 const AddUserUseCase = require('../Applications/use_case/AddUserUseCase');
@@ -23,18 +29,17 @@ const AuthenticationRepository = require('../Domains/authentications/Authenticat
 const AuthenticationRepositoryPostgres = require('./repository/AuthenticationRepositoryPostgres');
 const LogoutUserUseCase = require('../Applications/use_case/LogoutUserUseCase');
 const RefreshAuthenticationUseCase = require('../Applications/use_case/RefreshAuthenticationUseCase');
+const AddThreadUseCase = require('../Applications/use_case/AddThreadUseCase')
 
 // creating container
 const container = createContainer();
 
 // registering services and repository
-container.register([
-  {
+container.register([{
     key: UserRepository.name,
     Class: UserRepositoryPostgres,
     parameter: {
-      dependencies: [
-        {
+      dependencies: [{
           concrete: pool,
         },
         {
@@ -47,46 +52,51 @@ container.register([
     key: AuthenticationRepository.name,
     Class: AuthenticationRepositoryPostgres,
     parameter: {
-      dependencies: [
-        {
-          concrete: pool,
-        },
-      ],
+      dependencies: [{
+        concrete: pool,
+      }, ],
     },
   },
   {
     key: PasswordHash.name,
     Class: BcryptPasswordHash,
     parameter: {
-      dependencies: [
-        {
-          concrete: bcrypt,
-        },
-      ],
+      dependencies: [{
+        concrete: bcrypt,
+      }, ],
     },
   },
   {
     key: AuthenticationTokenManager.name,
     Class: JwtTokenManager,
     parameter: {
-      dependencies: [
-        {
-          concrete: Jwt.token,
-        },
-      ],
+      dependencies: [{
+        concrete: Jwt.token,
+      }, ],
     },
   },
+  {
+    key: ThreadRepository.name,
+    Class: ThreadRepositoryPostgres,
+    parameter: {
+      dependencies: [{
+          concrete: pool
+        },
+        {
+          concrete: nanoid
+        }
+      ]
+    }
+  }
 ]);
 
 // registering use cases
-container.register([
-  {
+container.register([{
     key: AddUserUseCase.name,
     Class: AddUserUseCase,
     parameter: {
       injectType: 'destructuring',
-      dependencies: [
-        {
+      dependencies: [{
           name: 'userRepository',
           internal: UserRepository.name,
         },
@@ -102,8 +112,7 @@ container.register([
     Class: LoginUserUseCase,
     parameter: {
       injectType: 'destructuring',
-      dependencies: [
-        {
+      dependencies: [{
           name: 'userRepository',
           internal: UserRepository.name,
         },
@@ -127,12 +136,10 @@ container.register([
     Class: LogoutUserUseCase,
     parameter: {
       injectType: 'destructuring',
-      dependencies: [
-        {
-          name: 'authenticationRepository',
-          internal: AuthenticationRepository.name,
-        },
-      ],
+      dependencies: [{
+        name: 'authenticationRepository',
+        internal: AuthenticationRepository.name,
+      }, ],
     },
   },
   {
@@ -140,8 +147,7 @@ container.register([
     Class: RefreshAuthenticationUseCase,
     parameter: {
       injectType: 'destructuring',
-      dependencies: [
-        {
+      dependencies: [{
           name: 'authenticationRepository',
           internal: AuthenticationRepository.name,
         },
@@ -152,6 +158,22 @@ container.register([
       ],
     },
   },
+  {
+    key: AddThreadUseCase.name,
+    Class: AddThreadUseCase,
+    parameter: {
+      injectType: 'destructuring',
+      dependencies: [{
+          name: 'threadRepository',
+          internal: ThreadRepository.name
+        },
+        {
+          name: 'authenticationTokenManager',
+          internal: AuthenticationTokenManager.name
+        }
+      ]
+    }
+  }
 ]);
 
 module.exports = container;
