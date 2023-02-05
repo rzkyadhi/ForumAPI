@@ -40,14 +40,10 @@ class JwtTokenManager extends AuthenticationTokenManager {
   }
 
   async getTokenFromHeader(header) {
-    try {
-      if (!header) throw new AuthenticationError('header tidak valid')
-      const headerArray = header.split(" ")
-      const token = headerArray[1]
-      return token
-    } catch (error) {
-      throw new AuthenticationError('header tidak valid')
-    }
+    if (!header) throw new AuthenticationError('Missing authentication')
+    const headerArray = header.split(" ")
+    const token = headerArray[1]
+    return token
   }
 }
 
