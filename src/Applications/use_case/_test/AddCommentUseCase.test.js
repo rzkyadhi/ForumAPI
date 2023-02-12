@@ -29,7 +29,7 @@ describe('AddCommentUseCase', () => {
 
         /* mocking needed function */
         mockThreadRepository.getThreadById = jest.fn()
-            .mockImplementation(() => Promise.resolve(useCaseParam.threadId))
+            .mockImplementation(() => Promise.resolve())
         mockAuthenticationTokenManager.getTokenFromHeader = jest.fn()
             .mockImplementation(() => Promise.resolve(accessToken))
         mockAuthenticationTokenManager.verifyAccessToken = jest.fn()

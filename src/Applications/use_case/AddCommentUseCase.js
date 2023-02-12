@@ -12,14 +12,14 @@ class AddCommentUseCase {
     }
 
     async execute(useCasePayload, bearerToken, useCaseParam) {
-        const threadId = await this._threadRepository.getThreadById(useCaseParam.threadId)
+        await this._threadRepository.getThreadById(useCaseParam.threadId)
         const accessToken = await this._authenticationTokenManager.getTokenFromHeader(bearerToken)
         await this._authenticationTokenManager.verifyAccessToken(accessToken)
         const {
             id: owner
         } = await this._authenticationTokenManager.decodePayload(accessToken)
         const addComment = new AddComment({
-            thread_id: threadId,
+            thread_id: useCaseParam.threadId,
             ...useCasePayload,
             owner: owner
         })
