@@ -31,7 +31,7 @@ class CommentRepositoryPostgres extends CommentRepository {
 
     async getCommentById(id) {
         const query = {
-            text: `SELECT * FROM comments WHERE comments.id = $1`,
+            text: `SELECT id, thread_id, content, owner FROM comments WHERE comments.id = $1`,
             values: [id]
         }
         const result = await this._pool.query(query)
