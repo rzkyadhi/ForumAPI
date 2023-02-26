@@ -6,11 +6,12 @@ const CommentsTableTestHelper = {
         id = 'comment-123',
         thread_id = 'thread-123',
         content = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
-        owner = 'owner-123'
+        owner = 'owner-123',
+        is_deleted = false
     }) {
         const query = {
-            text: 'INSERT INTO comments VALUES($1, $2, $3, $4)',
-            values: [id, thread_id, content, owner]
+            text: 'INSERT INTO comments (id, thread_id, content, owner, is_deleted) VALUES($1, $2, $3, $4, $5)',
+            values: [id, thread_id, content, owner, is_deleted]
         }
 
         await pool.query(query)
@@ -26,7 +27,7 @@ const CommentsTableTestHelper = {
         return result.rows
     },
 
-    async cleanTable()  {
+    async cleanTable() {
         await pool.query('DELETE FROM comments WHERE 1=1')
     }
 }
