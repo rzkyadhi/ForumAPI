@@ -102,6 +102,13 @@ describe('ThreadRepositoryPostgres', () => {
                 body : 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
                 owner : 'user-123'
             }
+
+            const expectedAddedThread = {
+                id : 'thread-123',
+                title : 'Menjadi Back-End Developer Super Expert',
+                body : 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
+                username : 'user-123'
+            }
             await ThreadsTableTestHelper.addThread(addThread)
             const threadRepositoryPostgres = new ThreadRepositoryPostgres(pool, {})
 
@@ -109,7 +116,10 @@ describe('ThreadRepositoryPostgres', () => {
             const thread = await threadRepositoryPostgres.getThreadById('thread-123')
 
             // Assert
-            expect(thread).toStrictEqual(addThread)
+            expect(thread.id).toEqual(expectedAddedThread.id)
+            expect(thread.title).toEqual(expectedAddedThread.title)
+            expect(thread.body).toEqual(expectedAddedThread.body)
+            expect(thread.username).toEqual(expectedAddedThread.username)
         })
     })
 })
