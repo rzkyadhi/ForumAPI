@@ -129,6 +129,12 @@ describe('CommentRepositoryPostgres', () => {
                 content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
                 owner: 'user-123'
             }
+            const expectedAddedComment = {
+                id: 'comment-find',
+                thread_id: 'thread-123',
+                content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+                username: 'user-123'
+            }
             await CommentsTableTestHelper.addComment(addComment)
             const commentRepositoryPostgres = new CommentRepositoryPostgres(pool, {})
 
@@ -136,7 +142,7 @@ describe('CommentRepositoryPostgres', () => {
             const comment = await commentRepositoryPostgres.getCommentById('comment-find')
 
             // Assert
-            expect(comment).toStrictEqual(addComment)
+            expect(comment).toStrictEqual(expectedAddedComment)
         })
     })
 
@@ -395,6 +401,68 @@ describe('CommentRepositoryPostgres', () => {
             // Assert
             const comment = await CommentsTableTestHelper.findCommentById('comment-find')
             expect(comment[0].is_deleted).toEqual(true)
+        })
+    })
+
+    describe('getCommentsByThreadId function', () => {
+        it('should resolve function correctly', async () => {
+            // Arrange & Action addUser
+            await UsersTableTestHelper.addUser({
+                id: 'user-123',
+                username: 'dicoding',
+                password: 'secret',
+                fullname: 'Dicoding Indonesia'
+            })
+
+            // Arrange & Action addThread
+            await ThreadsTableTestHelper.addThread({
+                id: 'thread-123',
+                title: 'Menjadi Back-End Developer Expert',
+                body: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
+                owner: 'user-123'
+            })
+
+            // Arrange & Action addComment with is_deleted = false
+            const addCommentFalse = {
+                id: 'comment-false',
+                thread_id: 'thread-123',
+                content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+                owner: 'user-123',
+                date: '2023-02-22'
+            }
+            await CommentsTableTestHelper.addComment(addCommentFalse)
+
+            // Arrange & Action addComment with is_deleted = true
+            const addCommentTrue = {
+                id: 'comment-true',
+                thread_id: 'thread-123',
+                content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+                owner: 'user-123',
+                date: '2023-02-22',
+                is_deleted: true
+            }
+            await CommentsTableTestHelper.addComment(addCommentTrue)
+
+            // Arrange
+            const commentRepositoryPostgres = new CommentRepositoryPostgres(pool, {})
+
+            // Action
+            const comments = await commentRepositoryPostgres.getCommentsByThreadId('thread-123')
+
+            // Assert
+            expect(comments).toEqual([{
+                    id: 'comment-false',
+                    username: 'user-123',
+                    date: '2023-02-22',
+                    content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.'
+                },
+                {
+                    id: 'comment-true',
+                    username: 'user-123',
+                    date: '2023-02-22',
+                    content: '**komentar telah dihapus**'
+                }
+            ])
         })
     })
 })

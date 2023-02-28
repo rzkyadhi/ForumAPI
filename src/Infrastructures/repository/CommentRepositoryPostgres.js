@@ -32,7 +32,7 @@ class CommentRepositoryPostgres extends CommentRepository {
 
     async getCommentById(id) {
         const query = {
-            text: `SELECT id, thread_id, content, owner FROM comments WHERE comments.id = $1`,
+            text: `SELECT id, thread_id, content, owner as username FROM comments WHERE comments.id = $1`,
             values: [id]
         }
         const result = await this._pool.query(query)
@@ -80,6 +80,19 @@ class CommentRepositoryPostgres extends CommentRepository {
         if (!result.rows.length) {
             throw new NotFoundError('tidak dapat menghapus comment karena comment tidak ditemukan')
         }
+    }
+
+    async getCommentsByThreadId(threadId) {
+        const query = {
+            text: `select id, owner as username, date, 
+                    CASE WHEN is_deleted = TRUE THEN '**komentar telah dihapus**' else content END as content
+                    FROM comments
+                    WHERE thread_id = $1
+                    ORDER BY date ASC`,
+            values: [threadId]
+        }
+        const result = await this._pool.query(query)
+        return result.rows
     }
 }
 
