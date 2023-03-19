@@ -428,7 +428,7 @@ describe('CommentRepositoryPostgres', () => {
                 thread_id: 'thread-123',
                 content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
                 owner: 'user-123',
-                date: '2023-02-22'
+                date: '2023-02-22 17:26:09'
             }
             await CommentsTableTestHelper.addComment(addCommentFalse)
 
@@ -438,7 +438,7 @@ describe('CommentRepositoryPostgres', () => {
                 thread_id: 'thread-123',
                 content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
                 owner: 'user-123',
-                date: '2023-02-22',
+                date: '2023-02-22 19:26:09',
                 is_deleted: true
             }
             await CommentsTableTestHelper.addComment(addCommentTrue)
@@ -452,14 +452,14 @@ describe('CommentRepositoryPostgres', () => {
             // Assert
             expect(comments).toEqual([{
                     id: 'comment-false',
-                    username: 'user-123',
-                    date: '2023-02-22',
+                    username: 'dicoding',
+                    date: '2023-02-22 17:26:09',
                     content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.'
                 },
                 {
                     id: 'comment-true',
-                    username: 'user-123',
-                    date: '2023-02-22',
+                    username: 'dicoding',
+                    date: '2023-02-22 19:26:09',
                     content: '**komentar telah dihapus**'
                 }
             ])
