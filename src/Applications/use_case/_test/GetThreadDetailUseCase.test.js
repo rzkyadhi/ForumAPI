@@ -34,7 +34,7 @@ describe('GetThreadDetailUseCase', () => {
         const mockCommentRepository = new CommentRepository()
 
         /* mocking needed function */
-        mockThreadRepository.getThreadById = jest.fn()
+        mockThreadRepository.getThreadDetailById = jest.fn()
             .mockImplementation(() => Promise.resolve(expectedThreadDetail))
         mockCommentRepository.getCommentsByThreadId = jest.fn()
             .mockImplementation(() => Promise.resolve(expectedComments))
@@ -53,7 +53,7 @@ describe('GetThreadDetailUseCase', () => {
             ...expectedThreadDetail,
             comments: expectedComments
         })
-        expect(mockThreadRepository.getThreadById).toBeCalledWith(useCaseParam.threadId)
+        expect(mockThreadRepository.getThreadDetailById).toBeCalledWith(useCaseParam.threadId)
         expect(mockCommentRepository.getCommentsByThreadId).toBeCalledWith(useCaseParam.threadId)
     })
 })
