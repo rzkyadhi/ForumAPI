@@ -30,9 +30,11 @@ class CommentsHandler {
     }
 
     async deleteCommentHandler(request) {
-        const headerAuthorization = request.headers.authorization
+        const {
+            id: owner
+        } = request.auth.credentials
         const deleteCommentUseCase = this._container.getInstance(DeleteCommentUseCase.name)
-        await deleteCommentUseCase.execute(headerAuthorization, request.params)
+        await deleteCommentUseCase.execute(owner, request.params)
 
         return {
             status: 'success'

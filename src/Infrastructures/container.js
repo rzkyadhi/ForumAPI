@@ -212,10 +212,6 @@ container.register([{
       dependencies: [{
           name: 'commentRepository',
           internal: CommentRepository.name
-        },
-        {
-          name: 'authenticationTokenManager',
-          internal: AuthenticationTokenManager.name
         }
       ]
     }
