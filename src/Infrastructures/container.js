@@ -184,10 +184,6 @@ container.register([{
       dependencies: [{
           name: 'threadRepository',
           internal: ThreadRepository.name
-        },
-        {
-          name: 'authenticationTokenManager',
-          internal: AuthenticationTokenManager.name
         }
       ]
     }
