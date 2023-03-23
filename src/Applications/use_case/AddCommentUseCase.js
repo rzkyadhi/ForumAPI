@@ -12,7 +12,7 @@ class AddCommentUseCase {
     }
 
     async execute(useCasePayload, bearerToken, useCaseParam) {
-        await this._threadRepository.getThreadById(useCaseParam.threadId)
+        await this._threadRepository.verifyThreadAvailability(useCaseParam.threadId)
         const accessToken = await this._authenticationTokenManager.getTokenFromHeader(bearerToken)
         await this._authenticationTokenManager.verifyAccessToken(accessToken)
         const {
