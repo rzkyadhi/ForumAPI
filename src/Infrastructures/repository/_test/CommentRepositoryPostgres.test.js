@@ -454,13 +454,15 @@ describe('CommentRepositoryPostgres', () => {
                     id: 'comment-false',
                     username: 'dicoding',
                     date: '2023-02-22 17:26:09',
+                    is_deleted: false,
                     content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.'
                 },
                 {
                     id: 'comment-true',
                     username: 'dicoding',
                     date: '2023-02-22 19:26:09',
-                    content: '**komentar telah dihapus**'
+                    is_deleted: true,
+                    content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.'
                 }
             ])
         })

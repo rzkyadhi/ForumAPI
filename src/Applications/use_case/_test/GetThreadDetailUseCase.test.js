@@ -23,10 +23,10 @@ describe('GetThreadDetailUseCase', () => {
                 content: "sebuah comment"
             },
             {
-                "id": "comment-yksuCoxM2s4MMrZJO-qVD",
-                "username": "dicoding",
-                "date": "2021-08-08T07:26:21.338Z",
-                "content": "**komentar telah dihapus**"
+                id: "comment-yksuCoxM2s4MMrZJO-qVD",
+                username: "dicoding",
+                date: "2021-08-08T07:26:21.338Z",
+                content: "**komentar telah dihapus**"
             }
         ]
         /* creating dependency of use case */
