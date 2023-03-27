@@ -48,13 +48,15 @@ describe('GetThreadDetailUseCase', () => {
                     id: "comment-_pby2_tmXV6bcvcdev8xk",
                     username: "johndoe",
                     date: "2021-08-08T07:22:33.555Z",
+                    is_deleted: false,
                     content: "sebuah comment"
                 },
                 {
                     id: "comment-yksuCoxM2s4MMrZJO-qVD",
                     username: "dicoding",
                     date: "2021-08-08T07:26:21.338Z",
-                    content: "**komentar telah dihapus**"
+                    is_deleted: true,
+                    content: "halo, dengan david disini..."
                 }
             ]))
 
