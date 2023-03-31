@@ -109,7 +109,7 @@ describe('/threads endpoint', () => {
             // Assert
             const responseJson = JSON.parse(response.payload)
             expect(response.statusCode).toEqual(401)
-            expect(responseJson.status).toEqual('fail')
+            expect(responseJson.error).toEqual('Unauthorized')
             expect(responseJson.message).toEqual('Missing authentication')
         })
         it('should response 400 if thread payload not contain needed property', async () => {
@@ -295,6 +295,21 @@ describe('/threads endpoint', () => {
             const responseJson = JSON.parse(response.payload)
             expect(response.statusCode).toEqual(200)
             expect(responseJson.status).toEqual('success')
+            expect(responseJson.data.thread).toBeDefined()
+            expect(responseJson.data.thread.id).toBeDefined()
+            expect(responseJson.data.thread.title).toBeDefined()
+            expect(responseJson.data.thread.body).toBeDefined()
+            expect(responseJson.data.thread.date).toBeDefined()
+            expect(responseJson.data.thread.username).toBeDefined()
+            expect(responseJson.data.thread.comments).toHaveLength(2)
+            expect(responseJson.data.thread.comments[0].id).toBeDefined()
+            expect(responseJson.data.thread.comments[0].username).toBeDefined()
+            expect(responseJson.data.thread.comments[0].date).toBeDefined()
+            expect(responseJson.data.thread.comments[0].content).toBeDefined()
+            expect(responseJson.data.thread.comments[1].id).toBeDefined()
+            expect(responseJson.data.thread.comments[1].username).toBeDefined()
+            expect(responseJson.data.thread.comments[1].date).toBeDefined()
+            expect(responseJson.data.thread.comments[1].content).toEqual('**komentar telah dihapus**')
         })
         it('should response 404 if thread not found or not valid', async () => {
             // Arrange

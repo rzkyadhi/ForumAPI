@@ -184,10 +184,6 @@ container.register([{
       dependencies: [{
           name: 'threadRepository',
           internal: ThreadRepository.name
-        },
-        {
-          name: 'authenticationTokenManager',
-          internal: AuthenticationTokenManager.name
         }
       ]
     }
@@ -204,10 +200,6 @@ container.register([{
         {
           name: 'commentRepository',
           internal: CommentRepository.name
-        },
-        {
-          name: 'authenticationTokenManager',
-          internal: AuthenticationTokenManager.name
         }
       ]
     }
@@ -220,10 +212,6 @@ container.register([{
       dependencies: [{
           name: 'commentRepository',
           internal: CommentRepository.name
-        },
-        {
-          name: 'authenticationTokenManager',
-          internal: AuthenticationTokenManager.name
         }
       ]
     }
