@@ -166,131 +166,47 @@ describe('/threads endpoint', () => {
         it('should response 200 if thread is available', async () => {
             // Arrange
             const server = await createServer(container)
-
-            const users = [{
-                    username: 'khnsvi',
-                    password: 'secret',
-                    fullname: 'Khansa Avi'
-                },
-                {
-                    username: 'rzkyadhi',
-                    password: 'secret',
-                    fullname: 'Rizky Adhi'
-                }
-            ];
-            await Promise.all(users.map(user =>
-                server.inject({
-                    method: 'POST',
-                    url: '/users',
-                    payload: user
-                })
-            ));
-            // login user 1
-            const loginResponseUserOne = await server.inject({
-                method: 'POST',
-                url: '/authentications',
-                payload: {
-                    username: 'khnsvi',
-                    password: 'secret'
-                }
+        
+            await UsersTableTestHelper.addUser({
+                id: 'user-123',
+                username: 'khnsvi',
+                password: 'secret',
+                fullname: 'Khansa Avi'
             })
-            const {
-                data: {
-                    accessToken: accessTokenUserOne,
-                    refreshToken: refreshTokenUserOne
-                }
-            } = JSON.parse(loginResponseUserOne.payload)
-            // add thread by user 1
-            const thread = await server.inject({
-                method: 'POST',
-                url: '/threads',
-                payload: {
-                    title: 'Menjadi Front-End Developer Expert',
-                    body: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'
-                },
-                headers: {
-                    Authorization: `Bearer ${accessTokenUserOne}`
-                }
+        
+            await UsersTableTestHelper.addUser({
+                id: 'user-456',
+                username: 'rzkyadhi',
+                password: 'secret',
+                fullname: 'Rizky Adhi'
             })
-            const {
-                data: {
-                    addedThread: {
-                        id: threadId
-                    }
-                }
-            } = JSON.parse(thread.payload)
-
-            // add comment
-            await server.inject({
-                method: 'POST',
-                url: `/threads/${threadId}/comments`,
-                payload: {
-                    content: 'Saya ingin menjadi front-end developer yang handal !'
-                },
-                headers: {
-                    Authorization: `Bearer ${accessTokenUserOne}`
-                }
+        
+            await ThreadsTableTestHelper.addThread({
+                id: 'thread-123',
+                title: 'Menjadi Front-End Developer Expert',
+                body: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
+                owner: 'user-123'
             })
-
-            // Logout user 1
-            await server.inject({
-                method: 'DELETE',
-                url: '/authentications',
-                payload: {
-                    refreshToken: refreshTokenUserOne
-                }
+        
+            await CommentsTableTestHelper.addComment({
+                id: 'comment-123',
+                thread_id: 'thread-123',
+                content: 'Saya ingin menjadi front-end developer yang hebat',
+                owner: 'user-123'
             })
-
-            // Login user 2
-            const loginResponseUserTwo = await server.inject({
-                method: 'POST',
-                url: '/authentications',
-                payload: {
-                    username: 'rzkyadhi',
-                    password: 'secret'
-                }
+        
+            await CommentsTableTestHelper.addComment({
+                id: 'comment-456',
+                thread_id: 'thread-123',
+                content: 'Saya ingin menjadi back-end developer yang handal',
+                owner: 'user-456',
+                is_deleted: true
             })
-
-            const {
-                data: {
-                    accessToken: accessTokenUserTwo,
-                }
-            } = JSON.parse(loginResponseUserTwo.payload)
-
-            // add comment
-            const commentUserTwo = await server.inject({
-                method: 'POST',
-                url: `/threads/${threadId}/comments`,
-                payload: {
-                    content: 'Saya ingin menjadi front-end developer yang handal !'
-                },
-                headers: {
-                    Authorization: `Bearer ${accessTokenUserTwo}`
-                }
-            })
-            const {
-                data: {
-                    addedComment: {
-                        id: commentIdUserTwo
-                    }
-                }
-            } = JSON.parse(commentUserTwo.payload)
-
-            // delete comment user two
-            await server.inject({
-                method: 'DELETE',
-                url: `/threads/${threadId}/comments/${commentIdUserTwo}`,
-                headers: {
-                    Authorization: `Bearer ${accessTokenUserTwo}`
-                }
-            })
-
-            // Action
+        
             const response = await server.inject({
                 method: 'GET',
-                url: `/threads/${threadId}`
+                url: `/threads/thread-123`
             })
-
             // Assert
             const responseJson = JSON.parse(response.payload)
             expect(response.statusCode).toEqual(200)
