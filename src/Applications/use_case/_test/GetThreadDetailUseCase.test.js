@@ -34,31 +34,29 @@ describe('GetThreadDetailUseCase', () => {
         const mockCommentRepository = new CommentRepository()
 
         /* mocking needed function */
-        mockThreadRepository.getThreadDetailById = jest.fn()
-            .mockImplementation(() => Promise.resolve({
-                id: "thread-h_2FkLZhtgBKY2kh4CC02",
-                title: "sebuah thread",
-                body: "sebuah body thread",
-                date: "2021-08-08T07:19:09.775Z",
+        mockThreadRepository.getThreadDetailById = jest.fn(() => Promise.resolve({
+            id: "thread-h_2FkLZhtgBKY2kh4CC02",
+            title: "sebuah thread",
+            body: "sebuah body thread",
+            date: "2021-08-08T07:19:09.775Z",
+            username: "dicoding",
+            comments: []
+        }))
+        mockCommentRepository.getCommentsByThreadId = jest.fn(() => Promise.resolve([{
+                id: "comment-_pby2_tmXV6bcvcdev8xk",
+                username: "johndoe",
+                date: "2021-08-08T07:22:33.555Z",
+                is_deleted: false,
+                content: "sebuah comment"
+            },
+            {
+                id: "comment-yksuCoxM2s4MMrZJO-qVD",
                 username: "dicoding",
-                comments: []
-            }))
-        mockCommentRepository.getCommentsByThreadId = jest.fn()
-            .mockImplementation(() => Promise.resolve([{
-                    id: "comment-_pby2_tmXV6bcvcdev8xk",
-                    username: "johndoe",
-                    date: "2021-08-08T07:22:33.555Z",
-                    is_deleted: false,
-                    content: "sebuah comment"
-                },
-                {
-                    id: "comment-yksuCoxM2s4MMrZJO-qVD",
-                    username: "dicoding",
-                    date: "2021-08-08T07:26:21.338Z",
-                    is_deleted: true,
-                    content: "halo, dengan david disini..."
-                }
-            ]))
+                date: "2021-08-08T07:26:21.338Z",
+                is_deleted: true,
+                content: "halo, dengan david disini..."
+            }
+        ]))
 
         /* creating use case instance */
         const getThreadDetailUseCase = new GetThreadDetailUseCase({
