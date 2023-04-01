@@ -3,3 +3,5 @@ node_modules
 config
 coverage
 forum-api-app-server.pem
+Forum API V2 Test.postman_collection.json
+Forum API V2 Test.postman_environment.json
