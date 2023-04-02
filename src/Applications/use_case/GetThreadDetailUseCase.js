@@ -11,16 +11,20 @@ class GetThreadDetailUseCase {
         const threadDetail = await this._threadRepository.getThreadDetailById(useCaseParam.threadId)
         const commentsDetail = await this._commentRepository.getCommentsByThreadId(useCaseParam.threadId)
 
-        commentsDetail.forEach((comment) => {
-            if (comment.is_deleted === true)
-                comment.content = '**komentar telah dihapus**'
-            delete comment.is_deleted
-        });
+        threadDetail.comments = commentsDetail.map(({
+            id,
+            username,
+            date,
+            is_deleted,
+            content
+        }) => ({
+            id,
+            username,
+            date,
+            content: is_deleted ? '**komentar telah dihapus**' : content
+        }))
 
-        return {
-            ...threadDetail,
-            comments: commentsDetail
-        }
+        return threadDetail
     }
 }
 
